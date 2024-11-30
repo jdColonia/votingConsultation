@@ -1,0 +1,30 @@
+module VotingConsultation {
+    // Excepción para manejar cuando no se encuentra un votante
+    exception VoterNotFoundException {
+        string reason;
+    };
+
+    // Excepción para errores generales
+    exception SystemException {
+        string reason;
+    };
+
+    // Estructura para almacenar la respuesta de la consulta
+    struct ConsultationResponse {
+        string votingStation;    // Puesto de votación
+        bool isPrime;            // Indicador si el número de factores primos es primo
+        long responseTime;       // Tiempo de respuesta en milisegundos
+    };
+
+    // Declaración de la secuencia fuera de la interfaz
+    sequence<ConsultationResponse> ConsultationResponseSeq;
+    sequence<string> StringSeq;
+
+    interface VotingService {
+        // Método para consultar el puesto de votación de un votante
+        ConsultationResponse getVotingStation(string voterId) throws VoterNotFoundException, SystemException;
+
+        // Método para consultar múltiples votantes
+        ConsultationResponseSeq getMultipleVotingStations(StringSeq voterIds) throws SystemException;
+    };
+};
