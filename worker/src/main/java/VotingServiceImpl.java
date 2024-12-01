@@ -48,18 +48,26 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     @Override
     public ConsultationResponse getVotingStation(String subscriberId, String voterId, Current current)
             throws VoterNotFoundException, SystemException {
+        // Notificar que el servidor está ocupado al comenzar
+        publisher.notifySubscribers("BUSY");
+
         long startTime = System.currentTimeMillis();
         try {
             String votingStation = consultation.consultVotingTableSingle(voterId);
             int primeFactorsCount = countPrimeFactors(Integer.parseInt(voterId));
-            boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es primo
+            boolean isPrime = isPrime(primeFactorsCount);
             long responseTime = System.currentTimeMillis() - startTime;
 
             // Registrar en el log
             logConsultation(subscriberId, voterId, votingStation, primeFactorsCount, isPrime, responseTime);
 
+            // Notificar que el servidor está disponible al terminar
+            publisher.notifySubscribers("AVAILABLE");
+
             return new ConsultationResponse(votingStation, isPrime, responseTime);
         } catch (Exception e) {
+            // Notificar que el servidor está disponible en caso de error
+            publisher.notifySubscribers("AVAILABLE");
             throw new SystemException(e.getMessage());
         }
     }
@@ -67,6 +75,9 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     @Override
     public ConsultationResponse[] getMultipleVotingStations(String subscriberId, String[] voterIds, Current current)
             throws SystemException {
+        // Notificar que el servidor está ocupado al comenzar
+        publisher.notifySubscribers("BUSY");
+
         List<ConsultationResponse> responses = new ArrayList<>();
         try {
             // Abrir la conexión al iniciar todas las consultas
@@ -78,8 +89,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
                     String votingStation = consultation.consultVotingTable(voterId);
                     int primeFactorsCount = countPrimeFactors(Integer.parseInt(voterId));
-                    boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es
-                                                                  // primo
+                    boolean isPrime = isPrime(primeFactorsCount);
                     long responseTime = System.currentTimeMillis() - startTime;
 
                     // Registrar en el log
@@ -90,6 +100,8 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
                 }
             }
         } catch (Exception e) {
+            // Notificar que el servidor está disponible en caso de error
+            publisher.notifySubscribers("AVAILABLE");
             throw new SystemException(e.getMessage());
         } finally {
             try {
@@ -99,7 +111,10 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
                 logger.severe("Error al cerrar la conexión a la base de datos: " + e.getMessage());
             }
         }
-        publisher.notifySubscribers(voterIds);
+
+        // Notificar que el servidor está disponible al terminar
+        publisher.notifySubscribers("AVAILABLE");
+
         return responses.toArray(new ConsultationResponse[0]);
     }
 

@@ -6,7 +6,11 @@ public class Worker {
     public static void main(String[] args) {
         try (Communicator communicator = Util.initialize(args, "worker.config")) {
             ObjectAdapter adapter = communicator.createObjectAdapter("WorkerAdapter");
+
+            // Crear el publicador
             PublisherI publisher = new PublisherI();
+
+            // Pasar el publicador al servicio de votación
             VotingServiceImpl votingService = new VotingServiceImpl(publisher);
 
             adapter.add(votingService, Util.stringToIdentity("VotingServiceWorker"));

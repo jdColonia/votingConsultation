@@ -38,6 +38,7 @@ public class Master {
             PublisherPrx publisher = PublisherPrx.checkedCast(communicator.propertyToProxy("Publisher.Proxy"));
             if (publisher != null) {
                 publisher.addSubscriber(subscriber.getSubscriberId(), subscriberPrx);
+                subscriber.setPublisherAvailable(publisher.isAvailable());
             } else {
                 throw new Error("Invalid proxy for Publisher");
             }

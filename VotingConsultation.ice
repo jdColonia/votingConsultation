@@ -29,11 +29,12 @@ module VotingConsultation {
     };
 
     interface Subscriber {
-        void onUpdate(StringSeq voterIds);
+        void onUpdate(string state);
     };
 
     interface Publisher {
         void addSubscriber(string subscriberId, Subscriber* subscriber);
         void removeSubscriber(string subscriberId);
+        bool isAvailable();
     };
 };

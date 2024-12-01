@@ -5,6 +5,7 @@ import com.zeroc.Ice.Current;
 
 public class SubscriberI implements VotingConsultation.Subscriber {
     private String subscriberId;
+    private boolean isPublisherAvailable;
 
     public SubscriberI() {
         try {
@@ -14,19 +15,28 @@ public class SubscriberI implements VotingConsultation.Subscriber {
             // Usar un ID alternativo si no se puede obtener el nombre del host
             this.subscriberId = "UnknownHost-" + System.currentTimeMillis();
         }
+        // Inicialmente, asumir que el publicador no está disponible
+        this.isPublisherAvailable = false;
     }
 
     @Override
-    public void onUpdate(String[] voterIds, Current current) {
-        System.out.println("Received update for Subscriber: " + subscriberId);
-        System.out.println("Received voter IDs for update:");
-        for (String voterId : voterIds) {
-            System.out.println(voterId);
-        }
+    public void onUpdate(String state, Current current) {
+        isPublisherAvailable = state.startsWith("AVAILABLE") ? true : false;
+        System.out.println(state);
     }
 
     // Método para obtener el ID del suscriptor
     public String getSubscriberId() {
         return subscriberId;
+    }
+
+    // Método para verificar la disponibilidad del publicador
+    public boolean isPublisherAvailable() {
+        return isPublisherAvailable;
+    }
+
+    // Método para establecer la disponibilidad del publicador
+    public void setPublisherAvailable(boolean isAvailable) {
+        this.isPublisherAvailable = isAvailable;
     }
 }
