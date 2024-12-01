@@ -3,6 +3,7 @@ import VotingConsultation.SystemException;
 import VotingConsultation.VoterNotFoundException;
 import com.zeroc.Ice.Current;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -47,7 +48,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
             throws VoterNotFoundException, SystemException {
         long startTime = System.currentTimeMillis();
         try {
-            String votingStation = consultation.consultVotingTable(voterId);
+            String votingStation = consultation.consultVotingTableSingle(voterId);
             int primeFactorsCount = countPrimeFactors(Integer.parseInt(voterId));
             boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es primo
             long responseTime = System.currentTimeMillis() - startTime;
@@ -65,12 +66,34 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     public ConsultationResponse[] getMultipleVotingStations(String[] voterIds, Current current)
             throws SystemException {
         List<ConsultationResponse> responses = new ArrayList<>();
-        for (String voterId : voterIds) {
+        try {
+            // Abrir la conexión al iniciar todas las consultas
+            consultation.openConnection();
+
+            for (String voterId : voterIds) {
+                try {
+                    long startTime = System.currentTimeMillis();
+
+                    String votingStation = consultation.consultVotingTable(voterId);
+                    int primeFactorsCount = countPrimeFactors(Integer.parseInt(voterId));
+                    boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es primo
+                    long responseTime = System.currentTimeMillis() - startTime;
+
+                    // Registrar en el log
+                    logConsultation(voterId, votingStation, primeFactorsCount, isPrime, responseTime);
+                    responses.add(new ConsultationResponse(votingStation, isPrime, responseTime));
+                } catch (SQLException e) {
+                    logger.warning("Votante no encontrado: " + voterId);
+                }
+            }
+        } catch (Exception e) {
+            throw new SystemException(e.getMessage());
+        } finally {
             try {
-                responses.add(getVotingStation(voterId, current));
-            } catch (VoterNotFoundException e) {
-                // Log the error and continue with next voter
-                logger.warning("Voter not found: " + voterId);
+                // Cerrar la conexión al finalizar todas las consultas
+                consultation.closeConnection();
+            } catch (SQLException e) {
+                logger.severe("Error al cerrar la conexión a la base de datos: " + e.getMessage());
             }
         }
         return responses.toArray(new ConsultationResponse[0]);
@@ -115,7 +138,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     }
 
     private void logConsultation(String voterId, String votingStation, int primeFactorsCount, boolean isPrime,
-            long responseTime) {
+                                 long responseTime) {
         // Crear la entrada de log con el número de factores primos y el indicador de si
         // es primo o no
         String logEntry = String.format("%s,%s,%d,%d,%d",
