@@ -48,11 +48,12 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
         long startTime = System.currentTimeMillis();
         try {
             String votingStation = consultation.consultVotingTable(voterId);
-            boolean isPrime = isPrimeFactorsCountPrime(voterId);
+            int primeFactorsCount = countPrimeFactors(Integer.parseInt(voterId));
+            boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es primo
             long responseTime = System.currentTimeMillis() - startTime;
 
             // Registrar en el log
-            logConsultation(current.id.name, voterId, votingStation, isPrime, responseTime);
+            logConsultation(voterId, votingStation, primeFactorsCount, isPrime, responseTime);
 
             return new ConsultationResponse(votingStation, isPrime, responseTime);
         } catch (Exception e) {
@@ -73,12 +74,6 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
             }
         }
         return responses.toArray(new ConsultationResponse[0]);
-    }
-
-    private boolean isPrimeFactorsCountPrime(String number) {
-        int n = Integer.parseInt(number);
-        int factorsCount = countPrimeFactors(n);
-        return isPrime(factorsCount);
     }
 
     private int countPrimeFactors(int n) {
@@ -119,11 +114,12 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
         return true;
     }
 
-    private void logConsultation(String clientId, String voterId, String votingStation,
-            boolean isPrime, long responseTime) {
-        // Crear la entrada de log solo con los datos solicitados
-        String logEntry = String.format("%s,%s,%d,%d",
-                voterId, votingStation, isPrime ? 1 : 0, responseTime);
+    private void logConsultation(String voterId, String votingStation, int primeFactorsCount, boolean isPrime,
+            long responseTime) {
+        // Crear la entrada de log con el número de factores primos y el indicador de si
+        // es primo o no
+        String logEntry = String.format("%s,%s,%d,%d,%d",
+                voterId, votingStation, primeFactorsCount, isPrime ? 1 : 0, responseTime);
 
         // Guardar en el archivo de log
         logger.info(logEntry);
