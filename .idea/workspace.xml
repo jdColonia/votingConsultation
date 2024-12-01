@@ -5,30 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3bf354f9-eadf-49a5-a524-da40ee0fbcad" name="Changes" comment="fix: correction in the send of messages">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VotingConsultation.ice" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ice_server.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/master/src/main/java/CLI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/master/src/main/java/Consultation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/master/src/main/java/ExecutionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/master/src/main/java/Master.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/master/src/main/java/VotingServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/master/src/main/resources/master.config" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/voter.list.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/voter.list.log.lck" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/worker/src/main/java/Worker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/worker/src/main/java/WorkerImp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/worker/src/main/resources/worker.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iceGrid/db/application-template.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iceGrid/db/config.node1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iceGrid/db/config.registry" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,31 +76,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Server.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ice-callback-app:client [:client:Client.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ice-callback-app:server [:server:Server.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.talker-callback-kbd-JuanDavidColoniaAldana-EstebanGaviriaZambrano:server [:server:Server.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.votingConsultation:master [:master:Master.main()].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Juan David Colonia/Downloads/votingConsultation/gradle/wrapper&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Client.executor": "Run",
+    "Application.Server.executor": "Run",
+    "Gradle.ice-callback-app:client [:client:Client.main()].executor": "Run",
+    "Gradle.ice-callback-app:server [:server:Server.main()].executor": "Run",
+    "Gradle.talker-callback-kbd-JuanDavidColoniaAldana-EstebanGaviriaZambrano:server [:server:Server.main()].executor": "Run",
+    "Gradle.votingConsultation:master [:master:Master.main()].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.codeium.enabled": "true",
+    "git-widget-placeholder": "iceGrid",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Juan David Colonia/Downloads/votingConsultation/gradle/wrapper",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Juan David Colonia\Downloads\votingConsultation\gradle\wrapper" />
@@ -143,14 +125,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.387" />
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.387" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
