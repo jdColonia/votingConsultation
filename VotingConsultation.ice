@@ -12,6 +12,7 @@ module VotingConsultation {
     // Estructura para almacenar la respuesta de la consulta
     struct ConsultationResponse {
         string votingStation;    // Puesto de votación
+        int primeFactorsCount; // Número de factores primos
         bool isPrime;            // Indicador si el número de factores primos es primo
         long responseTime;       // Tiempo de respuesta en milisegundos
     };

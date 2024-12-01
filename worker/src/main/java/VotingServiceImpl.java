@@ -15,16 +15,12 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
     private final Consultation consultation;
     private final Logger logger;
-    private long totalConsultations;
-    private long totalExecutionTime;
     private final PublisherI publisher;
 
     public VotingServiceImpl(PublisherI publisher) {
         this.publisher = publisher;
         this.consultation = new Consultation();
         this.logger = Logger.getLogger("VotingService");
-        this.totalConsultations = 0;
-        this.totalExecutionTime = 0;
 
         try {
             FileHandler fh = new FileHandler("voter.list.log", true);
@@ -64,7 +60,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
             // Notificar que el servidor está disponible al terminar
             publisher.notifySubscribers("AVAILABLE");
 
-            return new ConsultationResponse(votingStation, isPrime, responseTime);
+            return new ConsultationResponse(votingStation, primeFactorsCount, isPrime, responseTime);
         } catch (Exception e) {
             // Notificar que el servidor está disponible en caso de error
             publisher.notifySubscribers("AVAILABLE");
@@ -94,7 +90,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
                     // Registrar en el log
                     logConsultation(subscriberId, voterId, votingStation, primeFactorsCount, isPrime, responseTime);
-                    responses.add(new ConsultationResponse(votingStation, isPrime, responseTime));
+                    responses.add(new ConsultationResponse(votingStation, primeFactorsCount, isPrime, responseTime));
                 } catch (SQLException e) {
                     logger.warning("Votante no encontrado: " + voterId);
                 }
@@ -166,17 +162,6 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
         // Guardar en el archivo de log
         logger.info(logEntry);
-
-        synchronized (this) {
-            totalConsultations++;
-            totalExecutionTime += responseTime;
-        }
-    }
-
-    public synchronized void writeStatistics() {
-        String stats = String.format("Total consultations: %d, Total execution time: %d ms\n",
-                totalConsultations, totalExecutionTime);
-        logger.info(stats);
     }
 
 }
