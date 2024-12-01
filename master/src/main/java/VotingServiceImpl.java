@@ -6,8 +6,9 @@ import com.zeroc.Ice.Current;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class VotingServiceImpl implements VotingConsultation.VotingService {
 
@@ -24,8 +25,18 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
         try {
             FileHandler fh = new FileHandler("voter.list.log", true);
-            fh.setFormatter(new SimpleFormatter());
+
+            // Crear un formato personalizado para el logger
+            fh.setFormatter(new Formatter() {
+                @Override
+                public String format(LogRecord record) {
+                    // Solo guardar el mensaje del registro
+                    return record.getMessage() + "\n";
+                }
+            });
+
             logger.addHandler(fh);
+            logger.setUseParentHandlers(false); // Evitar que los logs vayan a la consola
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,17 +93,22 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     }
 
     private boolean isPrime(int n) {
-        if (n <= 1) return false;
+        if (n <= 1)
+            return false;
         for (int i = 2; i <= Math.sqrt(n); i++) {
-            if (n % i == 0) return false;
+            if (n % i == 0)
+                return false;
         }
         return true;
     }
 
     private void logConsultation(String clientId, String voterId, String votingStation,
-                                 boolean isPrime, long responseTime) {
-        String logEntry = String.format("%s,%s,%s,%d,%d\n",
-                clientId, voterId, votingStation, isPrime ? 1 : 0, responseTime);
+            boolean isPrime, long responseTime) {
+        // Crear la entrada de log solo con los datos solicitados
+        String logEntry = String.format("%s,%s,%d,%d",
+                voterId, votingStation, isPrime ? 1 : 0, responseTime);
+
+        // Guardar en el archivo de log
         logger.info(logEntry);
 
         synchronized (this) {
