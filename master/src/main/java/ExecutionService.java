@@ -9,10 +9,12 @@ import com.zeroc.Ice.Util;
 public class ExecutionService {
 
     private ExecutorService executorService;
+    private final String subscriberId;
     private final VotingConsultation.VotingServicePrx proxy;
     private final Logger logger = Logger.getLogger(ExecutionService.class.getName());
 
-    public ExecutionService(VotingConsultation.VotingServicePrx proxy) {
+    public ExecutionService(VotingConsultation.VotingServicePrx proxy, String subscriberId) {
+        this.subscriberId = subscriberId;
         this.proxy = proxy;
     }
 
@@ -26,7 +28,7 @@ public class ExecutionService {
     public void execute(String voterId) {
         executorService.submit(() -> {
             try {
-                VotingConsultation.ConsultationResponse response = proxy.getVotingStation(voterId);
+                VotingConsultation.ConsultationResponse response = proxy.getVotingStation(subscriberId, voterId);
                 logger.info(String.format("Consulta para votante %s completada. Puesto: %s, Tiempo: %d ms",
                         voterId, response.votingStation, response.responseTime));
             } catch (Exception e) {
@@ -38,13 +40,12 @@ public class ExecutionService {
 
     private void delegateToWorker(String voterId) {
         try (Communicator communicator = Util.initialize()) {
-            VotingConsultation.VotingServicePrx workerProxy =
-                    VotingConsultation.VotingServicePrx.checkedCast(
-                            communicator.stringToProxy("VotingServiceWorker@WorkerAdapter")
-                    );
+            VotingConsultation.VotingServicePrx workerProxy = VotingConsultation.VotingServicePrx.checkedCast(
+                    communicator.stringToProxy("VotingServiceWorker@WorkerAdapter"));
             if (workerProxy != null) {
-                VotingConsultation.ConsultationResponse response = workerProxy.getVotingStation(voterId);
-                logger.info(String.format("Consulta delegada para votante %s completada por worker. Puesto: %s, Tiempo: %d ms",
+                VotingConsultation.ConsultationResponse response = workerProxy.getVotingStation(subscriberId, voterId);
+                logger.info(String.format(
+                        "Consulta delegada para votante %s completada por worker. Puesto: %s, Tiempo: %d ms",
                         voterId, response.votingStation, response.responseTime));
             } else {
                 logger.severe("No se pudo obtener el proxy para VotingServiceWorker.");
@@ -57,7 +58,8 @@ public class ExecutionService {
     public void executeMultiple(String[] voterIds) {
         executorService.submit(() -> {
             try {
-                VotingConsultation.ConsultationResponse[] responses = proxy.getMultipleVotingStations(voterIds);
+                VotingConsultation.ConsultationResponse[] responses = proxy.getMultipleVotingStations(subscriberId,
+                        voterIds);
                 for (int i = 0; i < responses.length; i++) {
                     logger.info(String.format("Consulta para votante %s completada. Puesto: %s, Tiempo: %d ms",
                             voterIds[i], responses[i].votingStation, responses[i].responseTime));

@@ -46,7 +46,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     }
 
     @Override
-    public ConsultationResponse getVotingStation(String voterId, Current current)
+    public ConsultationResponse getVotingStation(String subscriberId, String voterId, Current current)
             throws VoterNotFoundException, SystemException {
         long startTime = System.currentTimeMillis();
         try {
@@ -56,7 +56,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
             long responseTime = System.currentTimeMillis() - startTime;
 
             // Registrar en el log
-            logConsultation(voterId, votingStation, primeFactorsCount, isPrime, responseTime);
+            logConsultation(subscriberId, voterId, votingStation, primeFactorsCount, isPrime, responseTime);
 
             return new ConsultationResponse(votingStation, isPrime, responseTime);
         } catch (Exception e) {
@@ -65,7 +65,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     }
 
     @Override
-    public ConsultationResponse[] getMultipleVotingStations(String[] voterIds, Current current)
+    public ConsultationResponse[] getMultipleVotingStations(String subscriberId, String[] voterIds, Current current)
             throws SystemException {
         List<ConsultationResponse> responses = new ArrayList<>();
         try {
@@ -78,11 +78,12 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
                     String votingStation = consultation.consultVotingTable(voterId);
                     int primeFactorsCount = countPrimeFactors(Integer.parseInt(voterId));
-                    boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es primo
+                    boolean isPrime = isPrime(primeFactorsCount); // Comprobamos si el número de factores primos es
+                                                                  // primo
                     long responseTime = System.currentTimeMillis() - startTime;
 
                     // Registrar en el log
-                    logConsultation(voterId, votingStation, primeFactorsCount, isPrime, responseTime);
+                    logConsultation(subscriberId, voterId, votingStation, primeFactorsCount, isPrime, responseTime);
                     responses.add(new ConsultationResponse(votingStation, isPrime, responseTime));
                 } catch (SQLException e) {
                     logger.warning("Votante no encontrado: " + voterId);
@@ -140,12 +141,13 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
         return true;
     }
 
-    private void logConsultation(String voterId, String votingStation, int primeFactorsCount, boolean isPrime,
-                                 long responseTime) {
+    private void logConsultation(String subscriberId, String voterId, String votingStation, int primeFactorsCount,
+            boolean isPrime,
+            long responseTime) {
         // Crear la entrada de log con el número de factores primos y el indicador de si
         // es primo o no
-        String logEntry = String.format("%s,%s,%d,%d,%d",
-                voterId, votingStation, primeFactorsCount, isPrime ? 1 : 0, responseTime);
+        String logEntry = String.format("%s,%s,%s,%d,%d,%d",
+                subscriberId, voterId, votingStation, primeFactorsCount, isPrime ? 1 : 0, responseTime);
 
         // Guardar en el archivo de log
         logger.info(logEntry);

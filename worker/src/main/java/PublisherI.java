@@ -11,15 +11,15 @@ public class PublisherI implements VotingConsultation.Publisher {
     }
 
     @Override
-    public void addSubscriber(String name, SubscriberPrx subscriber, Current current) {
-        System.out.println("New Subscriber: " + name);
-        subscribers.put(name, subscriber);
+    public void addSubscriber(String subscriberId, SubscriberPrx subscriber, Current current) {
+        System.out.println("New Subscriber: " + subscriberId);
+        subscribers.put(subscriberId, subscriber);
     }
 
     @Override
-    public void removeSubscriber(String name, Current current) {
-        subscribers.remove(name);
-        System.out.println("Subscriber has been removed: " + name);
+    public void removeSubscriber(String subscriberId, Current current) {
+        subscribers.remove(subscriberId);
+        System.out.println("Subscriber has been removed: " + subscriberId);
     }
 
     public void notifySubscribers(String[] voterIds) {

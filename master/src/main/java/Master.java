@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Master {
 
-    private VotingServiceImpl votingService;
+    // private VotingServiceImpl votingService;
     private ObjectAdapter adapter;
     private Communicator communicator;
     private final AtomicBoolean isShutdown = new AtomicBoolean(false);
@@ -27,45 +27,31 @@ public class Master {
                 return;
             }
 
-            // Crear e inicializar el servicio de votación
-            votingService = new VotingServiceImpl();
-
-            // Crear el adaptador
-            adapter = communicator.createObjectAdapter("VotingService");
-
-            // Activar el objeto y añadirlo al adaptador
-            adapter.add(votingService, Util.stringToIdentity("VotingService"));
-
-            // Activar el adaptador
-            adapter.activate();
-
-            System.out.println("Servidor iniciado y esperando conexiones...");
-
             // Registrar el Subscriber
             SubscriberI subscriber = new SubscriberI();
             ObjectAdapter subscriberAdapter = communicator.createObjectAdapter("Subscriber");
-            SubscriberPrx subscriberPrx = SubscriberPrx.checkedCast(subscriberAdapter.add(subscriber, Util.stringToIdentity("Subscriber")));
+            SubscriberPrx subscriberPrx = SubscriberPrx
+                    .checkedCast(subscriberAdapter.add(subscriber, Util.stringToIdentity("Subscriber")));
             subscriberAdapter.activate();
 
+            // Obtener el proxy del Publisher
             PublisherPrx publisher = PublisherPrx.checkedCast(communicator.propertyToProxy("Publisher.Proxy"));
             if (publisher != null) {
-                publisher.addSubscriber("Master", subscriberPrx);
+                publisher.addSubscriber(subscriber.getSubscriberId(), subscriberPrx);
             } else {
                 throw new Error("Invalid proxy for Publisher");
             }
 
-            // Obtener el proxy del servicio
-            VotingConsultation.VotingServicePrx votingServiceProxy =
-                    VotingConsultation.VotingServicePrx.checkedCast(
-                            adapter.createProxy(Util.stringToIdentity("VotingService"))
-                    );
+            // Obtener el proxy remoto del VotingServiceWorker
+            VotingConsultation.VotingServicePrx votingServiceProxy = VotingConsultation.VotingServicePrx.checkedCast(
+                    communicator.propertyToProxy("VotingServiceWorker.Proxy"));
 
             if (votingServiceProxy == null) {
-                throw new Error("No se pudo obtener el proxy para VotingService.");
+                throw new Error("No se pudo obtener el proxy remoto para VotingServiceWorker.");
             }
 
             // Inicializar la CLI
-            ExecutionService executionService = new ExecutionService(votingServiceProxy);
+            ExecutionService executionService = new ExecutionService(votingServiceProxy, subscriber.getSubscriberId());
             CLI cli = new CLI(executionService);
 
             // Iniciar CLI en un nuevo hilo
@@ -88,9 +74,9 @@ public class Master {
             if (adapter != null) {
                 adapter.destroy();
             }
-            if (votingService != null) {
-                votingService.writeStatistics();
-            }
+            // if (votingService != null) {
+            // votingService.writeStatistics();
+            // }
             if (communicator != null) {
                 communicator.destroy();
             }

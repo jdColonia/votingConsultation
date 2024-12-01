@@ -22,10 +22,10 @@ module VotingConsultation {
 
     interface VotingService {
         // Método para consultar el puesto de votación de un votante
-        ConsultationResponse getVotingStation(string voterId) throws VoterNotFoundException, SystemException;
+        ConsultationResponse getVotingStation(string subscriberId, string voterId) throws VoterNotFoundException, SystemException;
 
         // Método para consultar múltiples votantes
-        ConsultationResponseSeq getMultipleVotingStations(StringSeq voterIds) throws SystemException;
+        ConsultationResponseSeq getMultipleVotingStations(string subscriberId, StringSeq voterIds) throws SystemException;
     };
 
     interface Subscriber {
@@ -33,7 +33,7 @@ module VotingConsultation {
     };
 
     interface Publisher {
-        void addSubscriber(string name, Subscriber* subscriber);
-        void removeSubscriber(string name);
+        void addSubscriber(string subscriberId, Subscriber* subscriber);
+        void removeSubscriber(string subscriberId);
     };
 };

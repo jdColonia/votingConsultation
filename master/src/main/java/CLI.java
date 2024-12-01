@@ -11,7 +11,7 @@ public class CLI {
     private final Scanner scanner;
 
     public CLI(ExecutionService executionService) {
-        this.scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in, "UTF-8");
         this.executionService = executionService;
     }
 
