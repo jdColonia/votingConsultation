@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3bf354f9-eadf-49a5-a524-da40ee0fbcad" name="Changes" comment="fix: correction in the send of messages">
-      <change afterPath="$PROJECT_DIR$/iceGrid/db/application-template.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iceGrid/db/config.node1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iceGrid/db/config.registry" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/worker/src/main/java/Consultation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/worker/src/main/java/ExecutionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/worker/src/main/java/VotingServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
