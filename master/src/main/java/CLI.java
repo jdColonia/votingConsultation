@@ -7,18 +7,15 @@ import java.util.Scanner;
 
 public class CLI {
 
-    private ExecutionService executionService; // Ahora es opcional
+    private final ExecutionService executionService;
     private final Scanner scanner;
 
-    public CLI() {
+    public CLI(ExecutionService executionService) {
         this.scanner = new Scanner(System.in);
-    }
-
-    public void setExecutionService(ExecutionService executionService) {
         this.executionService = executionService;
     }
 
-    public void start() {
+    public void start(Runnable onExit) {
         // Solicitar el número de hilos al inicio
         initializeThreadPool();
 
@@ -42,6 +39,7 @@ public class CLI {
                     if (executionService != null) {
                         executionService.shutdown();
                     }
+                    onExit.run();
                     return;
                 default:
                     System.out.println("Opción no válida");
