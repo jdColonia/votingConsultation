@@ -4,16 +4,21 @@ import com.zeroc.Ice.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Master {
 
     private VotingServiceImpl votingService;
     private ObjectAdapter adapter;
+    private Communicator communicator;
+    private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
     public void initialize(String[] args) {
         List<String> extraArgs = new ArrayList<>();
 
-        try (Communicator communicator = Util.initialize(args, "master.config", extraArgs)) {
+        try {
+            communicator = Util.initialize(args, "master.config", extraArgs);
+
             if (!extraArgs.isEmpty()) {
                 System.err.println("Too many arguments provided. Extra arguments:");
                 extraArgs.forEach(System.out::println);
@@ -45,31 +50,35 @@ public class Master {
             }
 
             // Inicializar la CLI
-            CLI cli = new CLI();
             ExecutionService executionService = new ExecutionService(votingServiceProxy);
-            cli.setExecutionService(executionService);
+            CLI cli = new CLI(executionService);
 
-            // Iniciar la CLI en un nuevo hilo
-            new Thread(cli::start).start();
+            // Iniciar CLI en un nuevo hilo
+            new Thread(() -> cli.start(() -> {
+                shutdown(); // Llama a shutdown al salir del CLI
+                communicator.shutdown(); // Cierra el comunicador Ice
+            })).start();
 
-            // Esperar a que el comunicador se cierre
-            communicator.waitForShutdown();
+            communicator.waitForShutdown(); // Espera conexiones
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            if (votingService != null) {
-                votingService.writeStatistics();
-            }
+            shutdown();
         }
     }
 
     public void shutdown() {
-        if (adapter != null) {
-            adapter.destroy();
-        }
-        if (votingService != null) {
-            votingService.writeStatistics();
+        if (isShutdown.compareAndSet(false, true)) {
+            if (adapter != null) {
+                adapter.destroy();
+            }
+            if (votingService != null) {
+                votingService.writeStatistics();
+            }
+            if (communicator != null) {
+                communicator.destroy();
+            }
         }
     }
 
@@ -84,12 +93,6 @@ public class Master {
 
         // Inicializar el servidor
         master.initialize(args);
-    }
-
-    public void returnResponse() {
-        if (votingService != null) {
-            votingService.writeStatistics();
-        }
     }
 
 }
