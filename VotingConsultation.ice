@@ -27,4 +27,13 @@ module VotingConsultation {
         // Método para consultar múltiples votantes
         ConsultationResponseSeq getMultipleVotingStations(StringSeq voterIds) throws SystemException;
     };
+
+    interface Subscriber {
+        void onUpdate(StringSeq voterIds);
+    };
+
+    interface Publisher {
+        void addSubscriber(string name, Subscriber* subscriber);
+        void removeSubscriber(string name);
+    };
 };

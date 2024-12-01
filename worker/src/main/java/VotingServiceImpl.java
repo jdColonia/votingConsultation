@@ -17,8 +17,10 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
     private final Logger logger;
     private long totalConsultations;
     private long totalExecutionTime;
+    private final PublisherI publisher;
 
-    public VotingServiceImpl() {
+    public VotingServiceImpl(PublisherI publisher) {
+        this.publisher = publisher;
         this.consultation = new Consultation();
         this.logger = Logger.getLogger("VotingService");
         this.totalConsultations = 0;
@@ -96,6 +98,7 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
                 logger.severe("Error al cerrar la conexión a la base de datos: " + e.getMessage());
             }
         }
+        publisher.notifySubscribers(voterIds);
         return responses.toArray(new ConsultationResponse[0]);
     }
 

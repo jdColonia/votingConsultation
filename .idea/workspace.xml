@@ -5,7 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3bf354f9-eadf-49a5-a524-da40ee0fbcad" name="Changes" comment="fix: correction in the send of messages">
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/ConsultationResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/ConsultationResponseSeqHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/Publisher.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/PublisherPrx.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/Subscriber.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/SubscriberPrx.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/SystemException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/VoterNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/VotingService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/VotingServicePrx.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/_PublisherPrxI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/_SubscriberPrxI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VotingConsultation/_VotingServicePrxI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/master/src/main/java/SubscriberI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/voter.list.log.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/voter.list.log.lck" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/worker/src/main/java/PublisherI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VotingConsultation.ice" beforeDir="false" afterPath="$PROJECT_DIR$/VotingConsultation.ice" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master/src/main/java/Master.java" beforeDir="false" afterPath="$PROJECT_DIR$/master/src/main/java/Master.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master/src/main/resources/master.config" beforeDir="false" afterPath="$PROJECT_DIR$/master/src/main/resources/master.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/voter.list.log" beforeDir="false" afterPath="$PROJECT_DIR$/voter.list.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/worker/src/main/java/VotingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/worker/src/main/java/VotingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/worker/src/main/java/Worker.java" beforeDir="false" afterPath="$PROJECT_DIR$/worker/src/main/java/Worker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/worker/src/main/resources/worker.config" beforeDir="false" afterPath="$PROJECT_DIR$/worker/src/main/resources/worker.config" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +104,7 @@
     "Gradle.ice-callback-app:server [:server:Server.main()].executor": "Run",
     "Gradle.talker-callback-kbd-JuanDavidColoniaAldana-EstebanGaviriaZambrano:server [:server:Server.main()].executor": "Run",
     "Gradle.votingConsultation:master [:master:Master.main()].executor": "Run",
+    "Gradle.votingConsultation:worker [:worker:Worker.main()].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "com.codeium.enabled": "true",
     "git-widget-placeholder": "iceGrid",
@@ -108,7 +133,7 @@
       <command value="shutdown" />
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Master">
     <configuration name="Master" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Master" />
       <module name="votingConsultation.master.main" />
@@ -121,6 +146,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Worker" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Worker" />
+      <module name="votingConsultation.worker.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Worker" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

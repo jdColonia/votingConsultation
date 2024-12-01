@@ -1,3 +1,5 @@
+import VotingConsultation.PublisherPrx;
+import VotingConsultation.SubscriberPrx;
 import com.zeroc.Ice.Communicator;
 import com.zeroc.Ice.ObjectAdapter;
 import com.zeroc.Ice.Util;
@@ -38,6 +40,19 @@ public class Master {
             adapter.activate();
 
             System.out.println("Servidor iniciado y esperando conexiones...");
+
+            // Registrar el Subscriber
+            SubscriberI subscriber = new SubscriberI();
+            ObjectAdapter subscriberAdapter = communicator.createObjectAdapter("Subscriber");
+            SubscriberPrx subscriberPrx = SubscriberPrx.checkedCast(subscriberAdapter.add(subscriber, Util.stringToIdentity("Subscriber")));
+            subscriberAdapter.activate();
+
+            PublisherPrx publisher = PublisherPrx.checkedCast(communicator.propertyToProxy("Publisher.Proxy"));
+            if (publisher != null) {
+                publisher.addSubscriber("Master", subscriberPrx);
+            } else {
+                throw new Error("Invalid proxy for Publisher");
+            }
 
             // Obtener el proxy del servicio
             VotingConsultation.VotingServicePrx votingServiceProxy =
