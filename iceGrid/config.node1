@@ -1,11 +1,17 @@
-# IceGrid proxy locator configuration
-Ice.Default.Locator = VotingConsultationIceGrid/Locator:default -h localhost -p 4062
+# Configuración del proxy del locator de IceGrid
+Ice.Default.Locator=VotingConsultationIceGrid/Locator:default -h localhost -p 4062
 
-# IceGrid node configuration
-IceGrid.Node.Name = node1
-IceGrid.Node.Data = db/node1
-IceGrid.Node.Endpoints = default -h localhost
+# Configuración del nodo de IceGrid
+IceGrid.Node.Name=node1
+IceGrid.Node.Data=db/node1
+# Especifica el puerto de la aplicación (puede ser dinámico, como está ahora)
+IceGrid.Node.Endpoints=default -h localhost
+# Configuración para tener el nodo y el registro en la misma ejecución (como este no es el caso, se comenta)
+# IceGrid.Node.CollocateRegistry=default -h localhost
 
+# Comando para iniciar el nodo
 #icegridnode --Ice.Config=config.node1
+# Comando para administración de IceGrid
 #icegridadmin
+# Añadir aplicación con el template XML
 #application add application-template.xml

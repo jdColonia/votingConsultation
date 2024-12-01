@@ -4,11 +4,19 @@
             <parameter name="index" />
             <server id="VotingWorker-${index}" exe="java" activation="on-demand">
                 <option>-jar</option>
-                <option>../worker/build/libs/worker.jar</option>
-                <adapter name="VotingService" endpoints="tcp -h localhost">
-                        <object identity="VotingService-${index}" type="::VotingConsultation::VotingService" property="identity" />
+                <option>./../worker/build/libs/worker.jar</option>
+                <option>--index=${index}</option>  <!-- Añade esta línea para pasar el índice -->
+
+                <adapter name="WorkerAdapter" endpoints="tcp -h localhost -p 1000${index}">
+                    <object identity="VotingServiceWorker-${index}" type="::VotingConsultation::VotingService" />
+                    <object identity="Publisher-${index}" type="::VotingConsultation::Publisher" />
                 </adapter>
+
                 <property name="Ice.ThreadPool.Server.Size" value="10" />
+
+                <!-- Configuraciones de los objetos -->
+                <property name="VotingServiceWorker-${index}.Proxy" value="VotingServiceWorker-${index}:tcp -h localhost -p ${index}10000"/>
+                <property name="Publisher-${index}.Proxy" value="Publisher-${index}:tcp -h localhost -p ${index}10000"/>
             </server>
         </server-template>
 
