@@ -10,8 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Master {
 
-    // private VotingServiceImpl votingService;
-    private ObjectAdapter adapter;
     private Communicator communicator;
     private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
@@ -72,12 +70,6 @@ public class Master {
 
     public void shutdown() {
         if (isShutdown.compareAndSet(false, true)) {
-            if (adapter != null) {
-                adapter.destroy();
-            }
-            // if (votingService != null) {
-            // votingService.writeStatistics();
-            // }
             if (communicator != null) {
                 communicator.destroy();
             }
