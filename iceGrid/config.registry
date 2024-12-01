@@ -1,0 +1,13 @@
+# IceGrid Instance name
+IceGrid.InstanceName = VotingConsultationIceGrid
+
+# IceGrid registry configuration
+IceGrid.Registry.Client.Endpoints = default -h localhost -p 4062
+IceGrid.Registry.Server.Endpoints = default -h localhost
+IceGrid.Registry.Internal.Endpoints = default -h localhost
+IceGrid.Registry.AdminPermissionsVerifier = VotingConsultationIceGrid/NullPermissionsVerifier
+
+IceGrid.Registry.LMDB.Path = db/registry
+IceGrid.Registry.Discovery.Interface = 127.0.0.1
+
+#icegridregistry --Ice.Config=config.registry

@@ -3,6 +3,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.zeroc.Ice.Communicator;
+import com.zeroc.Ice.Util;
+
 public class ExecutionService {
 
     private ExecutorService executorService;
@@ -27,9 +30,28 @@ public class ExecutionService {
                 logger.info(String.format("Consulta para votante %s completada. Puesto: %s, Tiempo: %d ms",
                         voterId, response.votingStation, response.responseTime));
             } catch (Exception e) {
-                logger.severe("Error consultando votante " + voterId + ": " + e.getMessage());
+                // Delegate to worker if master is overloaded
+                delegateToWorker(voterId);
             }
         });
+    }
+
+    private void delegateToWorker(String voterId) {
+        try (Communicator communicator = Util.initialize()) {
+            VotingConsultation.VotingServicePrx workerProxy =
+                    VotingConsultation.VotingServicePrx.checkedCast(
+                            communicator.stringToProxy("VotingServiceWorker@WorkerAdapter")
+                    );
+            if (workerProxy != null) {
+                VotingConsultation.ConsultationResponse response = workerProxy.getVotingStation(voterId);
+                logger.info(String.format("Consulta delegada para votante %s completada por worker. Puesto: %s, Tiempo: %d ms",
+                        voterId, response.votingStation, response.responseTime));
+            } else {
+                logger.severe("No se pudo obtener el proxy para VotingServiceWorker.");
+            }
+        } catch (Exception e) {
+            logger.severe("Error delegando votante " + voterId + " a worker: " + e.getMessage());
+        }
     }
 
     public void executeMultiple(String[] voterIds) {

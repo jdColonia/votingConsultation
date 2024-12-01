@@ -1,0 +1,22 @@
+<icegrid>
+    <application name="VotingWorker">
+        <server-template id="VotingWorker">
+            <parameter name="index" />
+            <server id="VotingWorker-${index}" exe="java" activation="on-demand">
+                <option>-jar</option>
+                <option>../worker/build/libs/worker.jar</option>
+                <adapter name="VotingService" endpoints="tcp -h localhost">
+                        <object identity="VotingService-${index}" type="::VotingConsultation::VotingService" property="identity" />
+                </adapter>
+                <property name="Ice.ThreadPool.Server.Size" value="10" />
+            </server>
+        </server-template>
+
+        <node name="node1">
+            <server-instance template="VotingWorker" index="1" />
+            <server-instance template="VotingWorker" index="2" />
+            <server-instance template="VotingWorker" index="3" />
+            <server-instance template="VotingWorker" index="4" />
+        </node>
+    </application>
+</icegrid>

@@ -1,0 +1,13 @@
+# Configuration file (12/01/24 00:57:06.067)
+
+# Server configuration
+Ice.Admin.ServerId=VotingWorker-2
+Ice.Admin.Endpoints=tcp -h localhost
+Ice.ProgramName=VotingWorker-2
+# Object adapter VotingService
+VotingService.Endpoints=tcp -h localhost
+VotingService.AdapterId=VotingWorker-2.VotingService
+# Server descriptor properties
+identity=VotingService-2
+Ice.ThreadPool.Server.Size=10
+Ice.Default.Locator=VotingConsultationIceGrid/Locator:default -h localhost -p 4062
