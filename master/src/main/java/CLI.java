@@ -19,26 +19,26 @@ public class CLI {
     }
 
     public void start() {
+        // Solicitar el número de hilos al inicio
+        initializeThreadPool();
+
+        // Menú principal
         while (true) {
             System.out.println("\n=== Sistema de Consulta de Puestos de Votación ===");
-            System.out.println("1. Configurar número de hilos");
-            System.out.println("2. Consultar votante individual");
-            System.out.println("3. Consultar múltiples votantes desde archivo");
-            System.out.println("4. Salir");
+            System.out.println("1. Consultar votante individual");
+            System.out.println("2. Consultar múltiples votantes desde archivo");
+            System.out.println("3. Salir");
             System.out.print("Seleccione una opción: ");
 
             String option = scanner.nextLine();
             switch (option) {
                 case "1":
-                    configureThreads();
-                    break;
-                case "2":
                     consultSingleVoter();
                     break;
-                case "3":
+                case "2":
                     consultMultipleVoters();
                     break;
-                case "4":
+                case "3":
                     if (executionService != null) {
                         executionService.shutdown();
                     }
@@ -49,33 +49,27 @@ public class CLI {
         }
     }
 
-    private void configureThreads() {
+    private void initializeThreadPool() {
         if (executionService == null) {
             System.out.println("El servicio de ejecución no está configurado.");
             return;
         }
 
-        System.out.print("Ingrese el número de hilos: ");
-        try {
-            int threads = Integer.parseInt(scanner.nextLine());
-            defineNumberOfThreads(threads);
-        } catch (NumberFormatException e) {
-            System.out.println("Por favor ingrese un número válido");
+        while (true) {
+            System.out.print("Ingrese el número de hilos para el pool: ");
+            try {
+                int threads = Integer.parseInt(scanner.nextLine());
+                if (threads > 0) {
+                    executionService.newFixedThreadPool(threads);
+                    System.out.println("Pool de hilos configurado con " + threads + " hilos");
+                    break;
+                } else {
+                    System.out.println("El número de hilos debe ser mayor que 0");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor ingrese un número válido");
+            }
         }
-    }
-
-    public void defineNumberOfThreads(int N) {
-        if (executionService == null) {
-            System.out.println("El servicio de ejecución no está configurado.");
-            return;
-        }
-
-        if (N <= 0) {
-            System.out.println("El número de hilos debe ser mayor que 0");
-            return;
-        }
-        executionService.newFixedThreadPool(N);
-        System.out.println("Pool de hilos configurado con " + N + " hilos");
     }
 
     private void consultSingleVoter() {
