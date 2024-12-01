@@ -83,21 +83,38 @@ public class VotingServiceImpl implements VotingConsultation.VotingService {
 
     private int countPrimeFactors(int n) {
         int count = 0;
-        for (int i = 2; i <= n; i++) {
+        // Eliminar los factores de 2
+        while (n % 2 == 0) {
+            count++;
+            n /= 2;
+        }
+        // Eliminar los factores impares
+        for (int i = 3; i <= Math.sqrt(n); i += 2) {
             while (n % i == 0) {
                 count++;
                 n /= i;
             }
         }
+        // Si n es mayor que 2, entonces es un número primo
+        if (n > 2) {
+            count++;
+        }
         return count;
     }
 
-    private boolean isPrime(int n) {
+    private static boolean isPrime(int n) {
         if (n <= 1)
-            return false;
-        for (int i = 2; i <= Math.sqrt(n); i++) {
-            if (n % i == 0)
+            return false; // Números <= 1 no son primos
+        if (n == 2)
+            return true; // 2 es primo
+        if (n % 2 == 0)
+            return false; // Números pares > 2 no son primos
+
+        // Comprobar solo los impares desde 3 hasta √n
+        for (int i = 3; i <= Math.sqrt(n); i += 2) {
+            if (n % i == 0) {
                 return false;
+            }
         }
         return true;
     }
