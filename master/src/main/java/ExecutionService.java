@@ -90,7 +90,7 @@ public class ExecutionService {
     }
 
     public void executeMultiple(String[] voterIds) {
-        int partitionSize = 5000;
+        int partitionSize = 300;
         int totalPartitions = (int) Math.ceil((double) voterIds.length / partitionSize);
     
         for (int i = 0; i < totalPartitions; i++) {
@@ -98,13 +98,8 @@ public class ExecutionService {
             int end = Math.min(start + partitionSize, voterIds.length);
             String[] partition = Arrays.copyOfRange(voterIds, start, end);
     
-            if (i == 0) {
-                // Procesar la primera partición en el master
-                processPartition(partition);
-            } else {
-                // Enviar las siguientes particiones a los workers
-                delegatePartitionToWorker(partition);
-            }
+            delegatePartitionToWorker(partition);
+
         }
     }
 
@@ -130,28 +125,34 @@ public class ExecutionService {
     }
 
     public void delegatePartitionToWorker(String[] voterIds) {
-        try (Communicator communicator = Util.initialize()) {
-            VotingConsultation.VotingServicePrx workerProxy = VotingConsultation.VotingServicePrx.checkedCast(
-                    communicator.stringToProxy("VotingServiceWorker@WorkerAdapter"));
-            if (workerProxy != null) {
-                VotingConsultation.ConsultationResponse[] responses = workerProxy.getMultipleVotingStations(subscriberId, voterIds);
-                long executionTime = 0;
+        executorService.submit(() -> {
+            try {
+                try (Communicator communicator = Util.initialize()) {
+                    VotingConsultation.VotingServicePrx workerProxy = VotingConsultation.VotingServicePrx.checkedCast(
+                         communicator.stringToProxy("VotingServiceWorker@WorkerAdapter"));
+                    if (workerProxy != null) {
+                        VotingConsultation.ConsultationResponse[] responses = workerProxy.getMultipleVotingStations(subscriberId, voterIds);
+                        long executionTime = 0;
 
-                // Registrar consultas múltiples
-                for (int i = 0; i < responses.length; i++) {
-                    logConsultation(voterIds[i], responses[i].votingStation, responses[i].primeFactorsCount, responses[i].isPrime, responses[i].responseTime);
-                    executionTime += responses[i].responseTime;
+                        // Registrar consultas múltiples
+                        for (int i = 0; i < responses.length; i++) {
+                         logConsultation(voterIds[i], responses[i].votingStation, responses[i].primeFactorsCount, responses[i].isPrime, responses[i].responseTime);
+                            executionTime += responses[i].responseTime;
+                        }
+
+                     // Actualizar estadísticas para todas las consultas
+                        updateStatistics(responses.length, executionTime);
+
+                    } else {
+                        logger.severe("No se pudo obtener el proxy para VotingServiceWorker.");
+                    }
+                } catch (Exception e) {
+                    logger.severe("Error delegando partición a worker: " + e.getMessage());
                 }
-
-                // Actualizar estadísticas para todas las consultas
-                updateStatistics(responses.length, executionTime);
-
-            } else {
-                logger.severe("No se pudo obtener el proxy para VotingServiceWorker.");
+            } catch (Exception e) {
+                logger.severe("Error en consulta múltiple: " + e.getMessage());
             }
-        } catch (Exception e) {
-            logger.severe("Error delegando partición a worker: " + e.getMessage());
-        }
+        });
 
     }
 
