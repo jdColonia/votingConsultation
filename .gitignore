@@ -360,3 +360,4 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,windows,intellij,intellij+all,intellij+iml,java,gradle,logtalk
+/.idea/workspace.xml

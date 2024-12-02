@@ -1,0 +1,7 @@
+#
+# IceGrid node configuration.
+#
+Ice.Default.Locator=VotingConsultationIceGrid/Locator:default -h xhgrid10 -p 8888
+IceGrid.Node.Endpoints=default -h xhgrid17
+IceGrid.Node.Name=node4
+IceGrid.Node.Data=db/node4

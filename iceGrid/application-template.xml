@@ -30,12 +30,12 @@
             <server-instance template="VotingWorkerTemplate" index="4" host="xhgrid13"/>
         </node>
         <node name="node3">
-            <server-instance template="VotingWorkerTemplate" index="5" host="xhgrid14"/>
-            <server-instance template="VotingWorkerTemplate" index="6" host="xhgrid14"/>
+            <server-instance template="VotingWorkerTemplate" index="5" host="xhgrid16"/>
+            <server-instance template="VotingWorkerTemplate" index="6" host="xhgrid16"/>
         </node>
         <node name="node4">
-            <server-instance template="VotingWorkerTemplate" index="7" host="xhgrid16"/>
-            <server-instance template="VotingWorkerTemplate" index="8" host="xhgrid16"/>
+            <server-instance template="VotingWorkerTemplate" index="7" host="xhgrid17"/>
+            <server-instance template="VotingWorkerTemplate" index="8" host="xhgrid17"/>
         </node>
     </application>
 </icegrid>
