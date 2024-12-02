@@ -63,6 +63,9 @@ public class ExecutionService {
 			try {
 				ConsultationResponse response = proxy.getVotingStation(subscriberId, voterId);
 
+				System.out.println(String.format("\nConsulta para votante %s completada. Puesto: %s, Tiempo: %d ms\n",
+						voterId, response.votingStation, response.responseTime));
+
 				// Registrar en el log del master
 				logConsultation(voterId, response.votingStation, response.primeFactorsCount, response.isPrime,
 						response.responseTime);
