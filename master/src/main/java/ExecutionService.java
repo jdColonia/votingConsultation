@@ -23,6 +23,7 @@ public class ExecutionService {
 	private final Logger logger;
 	private long totalConsultations;
 	private long totalExecutionTime;
+	private static final int PARTITION_SIZE = 4870;
 
 	public ExecutionService(VotingServicePrx proxy, QueryPrx queryProxy, String subscriberId) {
 		this.subscriberId = subscriberId;
@@ -99,11 +100,10 @@ public class ExecutionService {
 	}
 
 	public void executeMultiple(String[] voterIds) {
-		int partitionSize = 30;
-		int totalPartitions = (int) Math.ceil((double) voterIds.length / partitionSize);
+		int totalPartitions = (int) Math.ceil((double) voterIds.length / PARTITION_SIZE);
 		for (int i = 0; i < totalPartitions; i++) {
-			int start = i * partitionSize;
-			int end = Math.min(start + partitionSize, voterIds.length);
+			int start = i * PARTITION_SIZE;
+			int end = Math.min(start + PARTITION_SIZE, voterIds.length);
 			String[] partition = Arrays.copyOfRange(voterIds, start, end);
 			executorService.submit(() -> {
 				VotingServicePrx votingServiceProxy = VotingServicePrx
