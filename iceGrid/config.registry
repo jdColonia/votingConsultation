@@ -1,20 +1,19 @@
-# Nombre de la instancia de IceGrid
-IceGrid.InstanceName = VotingConsultationIceGrid
+#
+# The IceGrid instance name.
+#
+IceGrid.InstanceName=VotingConsultationIceGrid
 
-# Configuración del registro de IceGrid
-# Endpoint del cliente para consultas
-IceGrid.Registry.Client.Endpoints=default -h localhost -p 4062
-# Endpoint del servidor para suscripciones de nodos
-IceGrid.Registry.Server.Endpoints=default -h localhost
-# Endpoints internos para la comunicación nodo-registro
-IceGrid.Registry.Internal.Endpoints=default -h localhost
-# Verificador de permisos para la administración de IceGrid (sin permisos)
+#
+# IceGrid registry configuration.
+#
+IceGrid.Registry.Client.Endpoints=default -h xhgrid10 -p 8888
+IceGrid.Registry.Server.Endpoints=default -h xhgrid10
+IceGrid.Registry.Internal.Endpoints=default -h xhgrid10
+# IceGrid.Registry.Discovery.Interface=127.0.0.1
+
+#
+# Data and Authentication
+#
+IceGrid.Registry.LMDB.Path=db/registry
 IceGrid.Registry.AdminPermissionsVerifier=VotingConsultationIceGrid/NullPermissionsVerifier
 
-# Ruta de la base de datos de registro de servidores
-IceGrid.Registry.LMDB.Path=db/registry
-# IP que puede administrar IceGrid
-IceGrid.Registry.Discovery.Interface=127.0.0.1
-
-# Comando para iniciar el registro
-#icegridregistry --Ice.Config=config.registry

@@ -58,5 +58,6 @@ subprojects {
         archiveBaseName.set(project.name)
         archiveClassifier.set('')
         archiveVersion.set('')
+        mergeServiceFiles()
     }
 }

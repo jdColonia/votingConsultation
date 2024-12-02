@@ -1,30 +1,41 @@
 <icegrid>
-    <application name="VotingWorker">
-        <server-template id="VotingWorker">
-            <parameter name="index" />
+    <application name="VotingSystem">
+        <server-template id="VotingWorkerTemplate">
+            <parameter name="index"/>
+            <parameter name="host"/> <!-- Parámetro para la dirección del host -->
+
             <server id="VotingWorker-${index}" exe="java" activation="on-demand">
                 <option>-jar</option>
-                <option>./../worker/build/libs/worker.jar</option>
-                <option>--index=${index}</option>  <!-- Añade esta línea para pasar el índice -->
+                <option>/home/swarch/esteban/worker-deploy/worker.jar</option>
+                <option>--index=${index}</option>
 
-                <adapter name="WorkerAdapter" endpoints="tcp -h localhost -p 1000${index}">
-                    <object identity="VotingServiceWorker-${index}" type="::VotingConsultation::VotingService" />
-                    <object identity="Publisher-${index}" type="::VotingConsultation::Publisher" />
+                <adapter name="WorkerAdapter" endpoints="tcp -h ${host} -p 1000${index}">
+                    <object identity="VotingServiceWorker-${index}" type="::VotingConsultation::VotingService"/>
+                    <object identity="Publisher-${index}" type="::VotingConsultation::Publisher"/>
                 </adapter>
 
-                <property name="Ice.ThreadPool.Server.Size" value="10" />
-
-                <!-- Configuraciones de los objetos -->
-                <property name="VotingServiceWorker-${index}.Proxy" value="VotingServiceWorker-${index}:tcp -h localhost -p ${index}10000"/>
-                <property name="Publisher-${index}.Proxy" value="Publisher-${index}:tcp -h localhost -p 100${index}0"/>
+                <property name="VotingServiceWorker-${index}.Proxy"
+                          value="VotingServiceWorker-${index}:tcp -h ${host} -p ${index}1000"/>
+                <property name="Publisher-${index}.Proxy" value="Publisher-${index}:tcp -h ${host} -p 100${index}1"/>
+                <property name="Ice.ThreadPool.Server.Size" value="4"/>
             </server>
         </server-template>
 
         <node name="node1">
-            <server-instance template="VotingWorker" index="1" />
-            <server-instance template="VotingWorker" index="2" />
-            <server-instance template="VotingWorker" index="3" />
-            <server-instance template="VotingWorker" index="4" />
+            <server-instance template="VotingWorkerTemplate" index="1" host="xhgrid11"/>
+            <server-instance template="VotingWorkerTemplate" index="2" host="xhgrid11"/>
+        </node>
+        <node name="node2">
+            <server-instance template="VotingWorkerTemplate" index="3" host="xhgrid13"/>
+            <server-instance template="VotingWorkerTemplate" index="4" host="xhgrid13"/>
+        </node>
+        <node name="node3">
+            <server-instance template="VotingWorkerTemplate" index="5" host="xhgrid14"/>
+            <server-instance template="VotingWorkerTemplate" index="6" host="xhgrid14"/>
+        </node>
+        <node name="node4">
+            <server-instance template="VotingWorkerTemplate" index="7" host="xhgrid16"/>
+            <server-instance template="VotingWorkerTemplate" index="8" host="xhgrid16"/>
         </node>
     </application>
 </icegrid>
