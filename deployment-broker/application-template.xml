@@ -9,14 +9,16 @@
                 <option>/home/swarch/esteban/worker-deploy/worker.jar</option>
                 <option>--index=${index}</option>
 
-                <adapter name="WorkerAdapter" endpoints="tcp -h ${host} -p 1000${index}">
-                    <object identity="VotingServiceWorker-${index}" type="::VotingConsultation::VotingService"/>
-                    <object identity="Publisher-${index}" type="::VotingConsultation::Publisher"/>
+                <adapter name="WorkerAdapter" endpoints="tcp -h ${host}">
+                    <object property="Identity" identity="VotingServiceWorker-${index}"
+                            type="::VotingConsultation::VotingService"/>
+                    <object property="Identity" identity="Publisher-${index}" type="::VotingConsultation::Publisher"/>
                 </adapter>
 
                 <property name="VotingServiceWorker-${index}.Proxy"
-                          value="VotingServiceWorker-${index}:tcp -h ${host} -p ${index}1000"/>
-                <property name="Publisher-${index}.Proxy" value="Publisher-${index}:tcp -h ${host} -p 100${index}1"/>
+                          value="VotingServiceWorker-${index}:tcp -h ${host}"/>
+                <property name="Publisher-${index}.Proxy"
+                          value="Publisher-${index}:tcp -h ${host}"/>
                 <property name="Ice.ThreadPool.Server.Size" value="4"/>
             </server>
         </server-template>

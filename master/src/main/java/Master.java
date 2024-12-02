@@ -49,15 +49,16 @@ public class Master {
 			subscriber.setPublisherAvailable(publisher.isAvailable());
 
 			// Obtener el proxy remoto del VotingServiceWorker
-			VotingServicePrx votingServiceProxy = VotingServicePrx.checkedCast(queryProxy.findObjectByType("::VotingConsultation::VotingService"));
-
+			VotingServicePrx votingServiceProxy = VotingServicePrx
+					.checkedCast(queryProxy.findObjectByType("::VotingConsultation::VotingService"));
 
 			if (votingServiceProxy == null) {
 				throw new Error("No se pudo obtener el proxy remoto para VotingServiceWorker.");
 			}
 
 			// Inicializar la CLI
-			ExecutionService executionService = new ExecutionService(votingServiceProxy, subscriber.getSubscriberId());
+			ExecutionService executionService = new ExecutionService(votingServiceProxy, queryProxy,
+					subscriber.getSubscriberId());
 			CLI cli = new CLI(executionService);
 
 			// Iniciar CLI en un nuevo hilo
