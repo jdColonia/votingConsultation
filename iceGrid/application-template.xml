@@ -16,7 +16,7 @@
 
                 <!-- Configuraciones de los objetos -->
                 <property name="VotingServiceWorker-${index}.Proxy" value="VotingServiceWorker-${index}:tcp -h localhost -p ${index}10000"/>
-                <property name="Publisher-${index}.Proxy" value="Publisher-${index}:tcp -h localhost -p ${index}10000"/>
+                <property name="Publisher-${index}.Proxy" value="Publisher-${index}:tcp -h localhost -p 100${index}0"/>
             </server>
         </server-template>
 

@@ -1,6 +1,7 @@
 import com.zeroc.Ice.Communicator;
 import com.zeroc.Ice.Util;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -89,6 +90,25 @@ public class ExecutionService {
     }
 
     public void executeMultiple(String[] voterIds) {
+        int partitionSize = 5000;
+        int totalPartitions = (int) Math.ceil((double) voterIds.length / partitionSize);
+    
+        for (int i = 0; i < totalPartitions; i++) {
+            int start = i * partitionSize;
+            int end = Math.min(start + partitionSize, voterIds.length);
+            String[] partition = Arrays.copyOfRange(voterIds, start, end);
+    
+            if (i == 0) {
+                // Procesar la primera partición en el master
+                processPartition(partition);
+            } else {
+                // Enviar las siguientes particiones a los workers
+                delegatePartitionToWorker(partition);
+            }
+        }
+    }
+
+    public void processPartition(String[] voterIds) {
         executorService.submit(() -> {
             try {
                 VotingConsultation.ConsultationResponse[] responses = proxy.getMultipleVotingStations(subscriberId, voterIds);
@@ -107,6 +127,32 @@ public class ExecutionService {
                 logger.severe("Error en consulta múltiple: " + e.getMessage());
             }
         });
+    }
+
+    public void delegatePartitionToWorker(String[] voterIds) {
+        try (Communicator communicator = Util.initialize()) {
+            VotingConsultation.VotingServicePrx workerProxy = VotingConsultation.VotingServicePrx.checkedCast(
+                    communicator.stringToProxy("VotingServiceWorker@WorkerAdapter"));
+            if (workerProxy != null) {
+                VotingConsultation.ConsultationResponse[] responses = workerProxy.getMultipleVotingStations(subscriberId, voterIds);
+                long executionTime = 0;
+
+                // Registrar consultas múltiples
+                for (int i = 0; i < responses.length; i++) {
+                    logConsultation(voterIds[i], responses[i].votingStation, responses[i].primeFactorsCount, responses[i].isPrime, responses[i].responseTime);
+                    executionTime += responses[i].responseTime;
+                }
+
+                // Actualizar estadísticas para todas las consultas
+                updateStatistics(responses.length, executionTime);
+
+            } else {
+                logger.severe("No se pudo obtener el proxy para VotingServiceWorker.");
+            }
+        } catch (Exception e) {
+            logger.severe("Error delegando partición a worker: " + e.getMessage());
+        }
+
     }
 
     private void logConsultation(String voterId, String votingStation, int primeFactorsCount, boolean isPrime, long responseTime) {
